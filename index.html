@@ -1,71 +1,156 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Exynos Proxy</title>
 <style>
+:root{color-scheme:dark;--bg:#080b12;--panel:#111827;
+--line:#253247;--cyan:#35e6ff;--muted:#98a9c0}
 *{box-sizing:border-box}
-body{
-  margin:0;min-height:100vh;
-  font-family:Arial,sans-serif;
-  background:#080b12;color:#f5f7ff;
-  display:flex;align-items:center;justify-content:center;
-  padding:22px
-}
-.card{
-  width:100%;max-width:420px;
-  background:#111827;border:1px solid #263248;
-  border-radius:22px;padding:28px;
-  box-shadow:0 0 35px #00d5ff12
-}
-.logo{font-size:30px;font-weight:800;letter-spacing:2px}
-.logo span{color:#00d5ff}
-.sub{color:#9caec5;font-size:14px;line-height:1.6}
-.tag{
-  display:inline-block;background:#102b35;color:#5ce5ff;
-  padding:7px 11px;border-radius:20px;font-size:12px;
-  margin:18px 0
-}
-label{display:block;margin:18px 0 8px;font-size:14px}
-input{
-  width:100%;padding:14px;border-radius:10px;
-  border:1px solid #34445d;background:#080d17;
-  color:white;font-size:15px;outline:none
-}
-button{
-  width:100%;padding:14px;margin-top:14px;
-  border:0;border-radius:10px;background:#00d5ff;
-  color:#061019;font-weight:800;font-size:15px
-}
-#status{font-size:14px;line-height:1.6;margin-top:16px}
-footer{color:#718198;text-align:center;font-size:12px;margin-top:24px}
+body{margin:0;background:var(--bg);color:#edf6ff;
+font:15px Arial,sans-serif}
+header{padding:22px 18px;border-bottom:1px solid var(--line)}
+.brand{font-size:24px;font-weight:800;color:var(--cyan)}
+small,.muted{color:var(--muted)}
+main{max-width:900px;margin:auto;padding:20px}
+nav{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:20px}
+button,input{font:inherit;border-radius:9px;padding:12px}
+button{background:#172438;border:1px solid #30425a;
+color:white;cursor:pointer}
+button:hover,.active{border-color:var(--cyan);color:var(--cyan)}
+input{width:100%;background:#080e19;border:1px solid var(--line);
+color:white;margin:7px 0 14px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,
+minmax(220px,1fr));gap:14px}
+.card{background:var(--panel);border:1px solid var(--line);
+border-radius:15px;padding:18px;margin-bottom:14px}
+h2{font-size:20px}h3{margin-top:0}
+.value{font-size:27px;font-weight:bold;color:var(--cyan)}
+.hidden{display:none}
+.primary{background:#073b49;border-color:var(--cyan)}
+#message{overflow-wrap:anywhere;color:var(--cyan)}
 </style>
 </head>
 <body>
-<main class="card">
-  <div class="logo">EXYNOS <span>PROXY</span></div>
-  <p class="sub">Secure access portal</p>
-  <div class="tag">● KEY-BASED ACCESS</div>
+<header>
+  <div class="brand">EXYNOS PROXY</div>
+  <small>NETWORK TOOLS • GAMING DASHBOARD</small>
+</header>
+<main>
+  <nav>
+    <button class="active" data-tab="home">Dashboard</button>
+    <button data-tab="proxy">Proxy</button>
+    <button data-tab="network">Network Test</button>
+    <button data-tab="access">Access</button>
+  </nav>
 
-  <label for="key">Enter your access key</label>
-  <input id="key" type="password" placeholder="Enter key provided to you">
+  <section id="home">
+    <div class="card">
+      <small>YOUR CONTROL CENTER</small>
+      <h2>Welcome to Exynos Proxy</h2>
+      <p class="muted">Your gaming network workspace.</p>
+      <p>Dashboard: <span class="value">READY</span></p>
+      <p class="muted">Proxy: Backend not configured</p>
+    </div>
+    <div class="grid">
+      <div class="card"><h3>Proxy Connection</h3>
+        <p class="muted">Configure your authorized proxy endpoint.</p>
+        <button data-go="proxy">Open Proxy</button>
+      </div>
+      <div class="card"><h3>Latency Test</h3>
+        <p class="muted">Estimate browser-to-website latency.</p>
+        <button data-go="network">Test Network</button>
+      </div>
+      <div class="card"><h3>Access Control</h3>
+        <p class="muted">Review the site's access limitations.</p>
+        <button data-go="access">Access Info</button>
+      </div>
+    </div>
+  </section>
 
-  <button onclick="checkKey()">VERIFY ACCESS</button>
-  <div id="status" role="status"></div>
-  <footer>Exynos Proxy · Authorized access only</footer>
+  <section id="proxy" class="hidden">
+    <div class="card">
+      <h2>Proxy Connection</h2>
+      <p class="muted">Interface only — no proxy server is connected yet.</p>
+      <label for="host">Proxy server address</label>
+      <input id="host" placeholder="proxy.example.com">
+      <label for="port">Port</label>
+      <input id="port" type="number" placeholder="8080">
+      <button class="primary" id="connect">Check Configuration</button>
+      <p id="proxyStatus" role="status">Disconnected</p>
+    </div>
+  </section>
+
+  <section id="network" class="hidden">
+    <div class="card">
+      <h2>Network Latency Test</h2>
+      <p class="muted">Measures a browser request to this website.
+      This is not your game's server ping.</p>
+      <button class="primary" id="test">Run Test</button>
+      <p class="value" id="latency">-- ms</p>
+      <p id="testStatus" role="status">Ready to test</p>
+    </div>
+  </section>
+
+  <section id="access" class="hidden">
+    <div class="card">
+      <h2>Selected Users</h2>
+      <p>Current hosting: GitHub Pages</p>
+      <p id="accessStatus">This page is not protected by user login.</p>
+      <p class="muted">A password stored in this HTML or JavaScript
+      would be visible to visitors. Secure access requires server-side
+      authentication or supported private hosting.</p>
+      <a href="https://docs.github.com/en/enterprise-cloud@latest/pages/getting-started-with-github-pages/changing-the-visibility-of-your-github-pages-site"
+      style="color:var(--cyan)">Read GitHub Pages access options</a>
+    </div>
+  </section>
+  <p id="message" role="status"></p>
 </main>
-
 <script>
-async function checkKey(){
-  const key=document.getElementById('key').value.trim();
-  const status=document.getElementById('status');
-  if(!key){
-    status.textContent='Please enter your access key.';
+const sections = ["home","proxy","network","access"];
+function showTab(id){
+  sections.forEach(s=>{
+    document.getElementById(s).classList.toggle("hidden",s!==id);
+  });
+  document.querySelectorAll("[data-tab]").forEach(b=>{
+    b.classList.toggle("active",b.dataset.tab===id);
+  });
+}
+document.querySelectorAll("[data-tab]").forEach(b=>
+  b.addEventListener("click",()=>showTab(b.dataset.tab)));
+document.querySelectorAll("[data-go]").forEach(b=>
+  b.addEventListener("click",()=>showTab(b.dataset.go)));
+
+document.getElementById("connect").addEventListener("click",()=>{
+  const host=document.getElementById("host").value.trim();
+  const port=Number(document.getElementById("port").value);
+  const out=document.getElementById("proxyStatus");
+  if(!host || !Number.isInteger(port) || port<1 || port>65535){
+    out.textContent="Enter a valid server address and port.";
     return;
   }
-  status.textContent='Verification service is not connected yet.';
-}
+  out.textContent="Configuration entered. A real proxy backend is still required.";
+});
+
+document.getElementById("test").addEventListener("click",async()=>{
+  const out=document.getElementById("latency");
+  const status=document.getElementById("testStatus");
+  out.textContent="Testing...";
+  status.textContent="Requesting this website...";
+  const start=performance.now();
+  try{
+    const url=location.origin+location.pathname+
+      "?latency_test="+Date.now();
+    await fetch(url,{cache:"no-store"});
+    out.textContent=Math.round(performance.now()-start)+" ms";
+    status.textContent="Browser request completed; results vary by network.";
+  }catch(e){
+    out.textContent="N/A";
+    status.textContent="Test failed. Check your internet connection.";
+  }
+});
 </script>
 </body>
 </html>
