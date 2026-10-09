@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Exynos Proxy</title>
+<style>
+*{box-sizing:border-box}
+body{
+  margin:0;min-height:100vh;
+  font-family:Arial,sans-serif;
+  background:#080b12;color:#f5f7ff;
+  display:flex;align-items:center;justify-content:center;
+  padding:22px
+}
+.card{
+  width:100%;max-width:420px;
+  background:#111827;border:1px solid #263248;
+  border-radius:22px;padding:28px;
+  box-shadow:0 0 35px #00d5ff12
+}
+.logo{font-size:30px;font-weight:800;letter-spacing:2px}
+.logo span{color:#00d5ff}
+.sub{color:#9caec5;font-size:14px;line-height:1.6}
+.tag{
+  display:inline-block;background:#102b35;color:#5ce5ff;
+  padding:7px 11px;border-radius:20px;font-size:12px;
+  margin:18px 0
+}
+label{display:block;margin:18px 0 8px;font-size:14px}
+input{
+  width:100%;padding:14px;border-radius:10px;
+  border:1px solid #34445d;background:#080d17;
+  color:white;font-size:15px;outline:none
+}
+button{
+  width:100%;padding:14px;margin-top:14px;
+  border:0;border-radius:10px;background:#00d5ff;
+  color:#061019;font-weight:800;font-size:15px
+}
+#status{font-size:14px;line-height:1.6;margin-top:16px}
+footer{color:#718198;text-align:center;font-size:12px;margin-top:24px}
+</style>
+</head>
+<body>
+<main class="card">
+  <div class="logo">EXYNOS <span>PROXY</span></div>
+  <p class="sub">Secure access portal</p>
+  <div class="tag">● KEY-BASED ACCESS</div>
+
+  <label for="key">Enter your access key</label>
+  <input id="key" type="password" placeholder="Enter key provided to you">
+
+  <button onclick="checkKey()">VERIFY ACCESS</button>
+  <div id="status" role="status"></div>
+  <footer>Exynos Proxy · Authorized access only</footer>
+</main>
+
+<script>
+async function checkKey(){
+  const key=document.getElementById('key').value.trim();
+  const status=document.getElementById('status');
+  if(!key){
+    status.textContent='Please enter your access key.';
+    return;
+  }
+  status.textContent='Verification service is not connected yet.';
+}
+</script>
+</body>
+</html>
